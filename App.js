@@ -23,7 +23,7 @@ export default class App extends PureComponent {
             />
           </View>
           <View style={{ paddingLeft: 10 }}>
-            <Text style={styles.profileName}>adib firman</Text>
+            <Text style={styles.profileName}>Adib Firman</Text>
           </View>
         </ScrollView>
       </View>
