@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import {
   StyleSheet, Image, View, ScrollView,
-  Text
+  Text, Animated
 } from 'react-native'
 
 const MAX_HEADER_HEIGHT = 120
@@ -11,11 +11,28 @@ const MIN_HEIGHT_PROFILE_IAMGE = 40
 const IMAGE_URL = 'https://themes.gohugo.io//theme/hugo-geo//img/profile.png'
 export default class App extends PureComponent {
 
+  state = {
+    scrollY: new Animated.Value(0)
+  }
+
   render() {
+    const { scrollY } = this.state
+    const headerHeight = scrollY.interpolate({
+      inputRange: [0, MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT],
+      outputRange: [MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT],
+      extrapolate: 'clamp'
+    })
+
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.header}/>
-        <ScrollView style={{ flex: 1 }}>
+        <Animated.View style={{ ...styles.header, height: headerHeight }} />
+        <ScrollView
+          style={{ flex: 1 }}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }]
+          )}
+        >
           <View style={styles.containerImgProfile}>
             <Image
               source={{ uri: IMAGE_URL }}
@@ -25,6 +42,7 @@ export default class App extends PureComponent {
           <View style={{ paddingLeft: 10 }}>
             <Text style={styles.profileName}>Adib Firman</Text>
           </View>
+          <View style={{ height: 3000 }} />
         </ScrollView>
       </View>
     );
